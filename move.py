@@ -13,11 +13,16 @@ class Move:
         return self._new_pos
 
     def action(self):
-        if not self._new_pos.get_type()=="exit":
+        if self.old_pos().get_type() == "block" or self.new_pos().get_type() == "block":
+            return "INVALID: BLOCK"
+        if not self._new_pos.get_type() == "exit":
             return "EXIT"
+        if abs(self._old_pos.get_q() - self._new_pos.get_q()) == 2 or \
+                abs(self._old_pos.get_r() - self._new_pos.get_r()) == 2:
+            return 'JUMP'
         if abs(self._old_pos.get_q() - self._new_pos.get_q()) > 2 or \
                 abs(self._old_pos.get_r() - self._new_pos.get_r()) > 2:
-            return 'JUMP'
+            return 'INVALID: JUMP'
         else:
             return "STEP"
 
