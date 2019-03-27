@@ -33,10 +33,10 @@ def main():
         colour = data["colour"]
 
         for block in blocks:
-            board_dict[block] = Hex(block[0], block[1], "block")
+            board_dict[block].set_type("block")
 
-        for q,r in pieces:
-            board_dict[(q, r)] = Hex(q, r, colour)
+        for piece in pieces:
+            board_dict[piece].set_type(colour)
 
         print_board(board_dict)
 
