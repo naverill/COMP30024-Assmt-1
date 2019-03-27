@@ -8,24 +8,38 @@ Authors:
 import sys
 import json
 from collections import defaultdict
-
-BOARD_SIZE = 3
+from hex import Hex
 
 def main():
     board_dict = defaultdict()
 
-    ran = range(-3, +3+1)
+    ran = range(-Hex.BOARD_SIZE, +Hex.BOARD_SIZE+1)
     cells = []
-    for qr in [(q,r) for q in ran for r in ran if -q-r in ran]:
-        board_dict[qr] = ''
+    for q, r in [(q,r) for q in ran for r in ran if -q-r in ran]:
+        board_dict[(q, r)] = Hex(q, r)
+
+        neighbours = board_dict[(q, r)].get_neighbours()
+        print((q, r), neighbours)
+    print_board(board_dict, debug=True)
+
+
 
     # print(board_dict)
 
     with open(sys.argv[1]) as file:
         data = json.load(file)
-        board_dict.update(dict.fromkeys([tuple(l) for l in data['blocks']], "block"))
-        board_dict.update(dict.fromkeys([tuple(l) for l in data['pieces']], data["colour"]))
+        blocks  = [tuple(l) for l in data['blocks']]
+        pieces = [tuple(l) for l in data['pieces']]
+        colour = data["colour"]
+
+        for block in blocks:
+            board_dict[block] = Hex(block[0], block[1], "block")
+
+        for q,r in pieces:
+            board_dict[(q, r)] = Hex(q, r, colour)
+
         print_board(board_dict)
+
 
     # TODO: Search for and output winning sequence of moves
 
@@ -100,11 +114,11 @@ def print_board(board_dict, message="", debug=False, **kwargs):
 #              `-._,-' `-._,-' `-._,-' `-._,-'     `-._,-'"""
 
     # prepare the provided board contents as strings, formatted to size.
-    ran = range(-BOARD_SIZE, +BOARD_SIZE+1)
+    ran = range(-Hex.BOARD_SIZE, +Hex.BOARD_SIZE+1)
     cells = []
     for qr in [(q,r) for q in ran for r in ran if -q-r in ran]:
         if qr in board_dict:
-            cell = str(board_dict[qr]).center(5)
+            cell = str(board_dict[qr].get_type()).center(5)
         else:
             cell = "     " # 5 spaces will fill a cell
         cells.append(cell)

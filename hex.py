@@ -2,10 +2,11 @@
 class Hex:
     BOARD_SIZE = 3
 
-    def __init__(self, q=-1, r=-1, type=None):
+    def __init__(self, q=-1, r=-1, type=''):
         self._q = q
         self._r = r
         self._type = type
+        self.neighbours = [self.left, self.right, self.top_left, self.top_right, self.bottom_left, self.bottom_right]
 
     def get_type(self):
         return self._type
@@ -23,35 +24,46 @@ class Hex:
         return self._r
 
     def left(self):
-        if not Hex.is_valid(self.q - 1, self.r):
+        if not Hex.is_valid(self._q - 1, self._r):
             return None
-        return Hex(self._q - 1, self._r)
+        return self._q - 1, self._r
 
     def right(self):
-        if not Hex.is_valid(self.q + 1, self.r):
+        if not Hex.is_valid(self._q + 1, self._r):
             return None
-        return Hex(self._q + 1, self._r)
+        return self._q + 1, self._r
 
     def top_left(self):
-        if not Hex.is_valid(self.q, self.r - 1):
+        if not Hex.is_valid(self._q, self._r - 1):
             return None
-        return Hex(self._q, self._r - 1)
+        return self._q, self._r - 1
 
     def top_right(self):
-        if not Hex.is_valid(self.q + 1, self.r - 1):
+        if not Hex.is_valid(self._q + 1, self._r - 1):
             return None
-        return Hex(self._q + 1, self._r - 1)
+        return self._q + 1, self._r - 1
 
     def bottom_left(self):
-        if not Hex.is_valid(self.q - 1, self.r + 1):
+        if not Hex.is_valid(self._q - 1, self._r + 1):
             return None
-        return Hex(self._q - 1, self._r + 1)
+        return self._q - 1, self._r + 1
 
     def bottom_right(self):
-        if not Hex.is_valid(self.q, self.r + 1):
+        if not Hex.is_valid(self._q, self._r + 1):
             return None
-        return Hex(self._q, self._r + 1)
+        return self._q, self._r + 1
+
+    def get_neighbours(self):
+        neighbours = []
+        for neighbour in self.neighbours:
+            if neighbour():
+                neighbours.append(neighbour())
+        return neighbours
 
     @staticmethod
     def is_valid(q, r):
-        return q >= 0 and q <= Hex.BOARD_SIZE and r >= 0 and r <= Hex.BOARD_SIZE
+        ran = range(-Hex.BOARD_SIZE, Hex.BOARD_SIZE + 1)
+        return -q-r in ran \
+               and -Hex.BOARD_SIZE <= q <= Hex.BOARD_SIZE \
+               and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE
+
