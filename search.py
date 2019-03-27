@@ -9,6 +9,7 @@ import sys
 import json
 from collections import defaultdict
 from hex import Hex
+from a_star import a_star
 
 def main():
     board_dict = defaultdict()
@@ -17,14 +18,6 @@ def main():
     cells = []
     for q, r in [(q,r) for q in ran for r in ran if -q-r in ran]:
         board_dict[(q, r)] = Hex(q, r)
-
-        neighbours = board_dict[(q, r)].get_neighbours()
-        print((q, r), neighbours)
-    print_board(board_dict, debug=True)
-
-
-
-    # print(board_dict)
 
     with open(sys.argv[1]) as file:
         data = json.load(file)
@@ -40,6 +33,9 @@ def main():
 
         print_board(board_dict)
 
+        paths = a_star(board_dict, pieces, goal)
+
+    output_paths(paths)
 
     # TODO: Search for and output winning sequence of moves
 
@@ -126,6 +122,11 @@ def print_board(board_dict, message="", debug=False, **kwargs):
     # fill in the template to create the board drawing, then print!
     board = template.format(message, *cells)
     print(board, **kwargs)
+
+
+def output_paths(path):
+    for move in path:
+        print("%s from %s to #s." % (move.action(), move.old_pos().to_coordinate_string(), move._new_pos().to_coordinate_string()))
 
 
 # when this module is executed, run the `main` function:

@@ -6,7 +6,7 @@ class Hex:
         self._q = q
         self._r = r
         self._type = type
-        self.neighbours = [self.left, self.right, self.top_left, self.top_right, self.bottom_left, self.bottom_right]
+        self._neighbours = [self.left, self.right, self.top_left, self.top_right, self.bottom_left, self.bottom_right]
 
     def get_type(self):
         return self._type
@@ -16,6 +16,9 @@ class Hex:
 
     def get_coordinate(self):
         return self._q, self._r
+
+    def get_coordinate_string(self):
+        return "(", + str(self.q) + ', ' + str(self.r) + ")"
     
     def get_q(self):
         return self._q
@@ -55,7 +58,7 @@ class Hex:
 
     def get_neighbours(self):
         neighbours = []
-        for neighbour in self.neighbours:
+        for neighbour in self._neighbours:
             if neighbour():
                 neighbours.append(neighbour())
         return neighbours

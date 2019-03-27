@@ -1,12 +1,23 @@
 
 class Move:
-    def __init__(self, old_position, new_position, cost=1):
+    def __init__(self, old_position, new_position, action='', cost=1):
         self._old_pos = old_position
         self._new_pos = new_position
+        self.action = action
         self._cost = cost
 
-    def get_old_pos(self):
+    def old_pos(self):
         return self._old_pos
 
-    def get_new_pos(self):
+    def new_pos(self):
         return self._new_pos
+
+    def action(self):
+        if not self._new_pos.get_type()=="exit":
+            return "EXIT"
+        if abs(self._old_pos.get_q() - self._new_pos.get_q()) > 2 or \
+                abs(self._old_pos.get_r() - self._new_pos.get_r()) > 2:
+            return 'JUMP'
+        else:
+            return "STEP"
+
