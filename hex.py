@@ -19,12 +19,18 @@ class Hex:
 
     def get_coordinate_string(self):
         return "(", + str(self.q) + ', ' + str(self.r) + ")"
-    
-    def get_q(self):
+
+    def q(self):
         return self._q
 
-    def get_r(self):
+    def r(self):
         return self._r
+
+    def set_q(self, value):
+        self._q = value
+
+    def set_r(self, value):
+        self._r = value
 
     def left(self):
         if not Hex.is_valid(self._q - 1, self._r):
@@ -63,10 +69,12 @@ class Hex:
                 neighbours.append(neighbour())
         return neighbours
 
+    def equal(self, other):
+        return self._q == other.q() and self._r == other.r()
+
     @staticmethod
     def is_valid(q, r):
         ran = range(-Hex.BOARD_SIZE, Hex.BOARD_SIZE + 1)
         return -q-r in ran \
                and -Hex.BOARD_SIZE <= q <= Hex.BOARD_SIZE \
                and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE
-
