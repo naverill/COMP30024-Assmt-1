@@ -19,6 +19,7 @@ def main():
     for q, r in [(q,r) for q in ran for r in ran if -q-r in ran]:
         board_dict[(q, r)] = Hex(q, r)
 
+    obstacles = set()
     with open(sys.argv[1]) as file:
         data = json.load(file)
         blocks  = [tuple(l) for l in data['blocks']]
@@ -27,16 +28,18 @@ def main():
 
         for block in blocks:
             board_dict[block].set_type("block")
+            obstacles.add("blocks")
 
         for piece in pieces:
             board_dict[piece].set_type(colour)
+            obstacles.add(colour)
 
         print_board(board_dict)
 
         for key, piece in board_dict.items():
             print(key, piece.get_neighbours())
 
-        # paths = a_star(board_dict, pieces, goal)
+        # paths = a_star(board_dict, pieces, goal, obstace=les)
 
     # output_paths(paths)
 

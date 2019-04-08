@@ -72,9 +72,20 @@ class Hex:
     def equal(self, other):
         return self._q == other.q() and self._r == other.r()
 
+    def jump(self, neighbour, board, obstacles):
+        opposite = self._opposite_neighbour(neighbour)
+        opposite_hex = board[opposite]
+        return opposite_hex
+
+    def _opposite_neighbour(self, neighbour):
+        #todo(naverill) test
+        diff = self.get_coordinate() - neighbour.get_coordinate()
+        return self.get_coordinate() + diff
+
+
     @staticmethod
     def is_valid(q, r):
         ran = range(-Hex.BOARD_SIZE, Hex.BOARD_SIZE + 1)
-        return -q-r in ran \
+        return (-q-r in ran \
                and -Hex.BOARD_SIZE <= q <= Hex.BOARD_SIZE \
-               and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE
+               and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE)  #coordinate equal to exit piece

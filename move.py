@@ -1,15 +1,15 @@
 
 class Move:
-    def __init__(self, parent, position, action='', cost=1):
+    def __init__(self, parent, state, action='', cost=1):
         self._parent = parent   # Move
-        self._position = position # Hex
+        self._state = state # Hex
         self.action = action
         self._g = None
-        self._h = None
+        self._h = self._init_h()
         self.cost = cost
 
-    def position(self):
-        return self._position
+    def state(self):
+        return self._state
 
     def parent(self):
         return self._parent
@@ -23,21 +23,42 @@ class Move:
     def f(self):
         return self._g + self._h
 
-    def equal(self, other):
-        return self._position.equal(other)
+    def set_g(self, g):
+        self._g = g
 
-    
+    def _init_h(self, h):
+        # shortest distance to goal node
+        path_cost = []
+        for piece in self._state.values():
+            goal_dist = []
+            for goal in self._goal.values():
+                goal_dist.append(self._hex_distance(piece, goal))
+            path_cost.append(min(goal_dist))
+        return sum(path_cost)
 
-    # def action(self):
-    #     if self.parent().position().get_type() == "block" or self.position().get_type() == "block":
-    #         return "INVALID: BLOCK"
-    #     if not self._position.get_type() == "exit":
-    #         return "EXIT"
-    #     if abs(self._parent.get_q() - self._position.get_q()) == 2 or \
-    #             abs(self._parent.get_r() - self._position.get_r()) == 2:
-    #         return 'JUMP'
-    #     if abs(self._parent.get_q() - self._position.get_q()) > 2 or \
-    #             abs(self._parent.get_r() - self._position.get_r()) > 2:
-    #         return 'INVALID: JUMP'
-    #     else:
-    #         return "STEP"
+    def get_moved_piece(self):
+        new_pos_set = set(self._state.key())
+        old_pos_set = set(self._parent.state().key())
+        old_pos = old_pos_set.difference(new_pos_set)
+        new_pos = new_pos_set.difference(old_pos_set)
+        return old_pos, new_pos
+
+    def print_move(self):
+        old_pos, new_pos = self.get_moved_piece()
+        action = self.action()
+        print("{} from {} to {}.".format(action, old_pos, new_pos))
+
+    def action(self):
+        if not self._state.get_type() == "EXIT":
+            return "EXIT"
+        else:
+            return self._action
+        pass
+
+    def __eq__(self, other):
+        return self._state.equal(self.other.state())
+
+    @staticmethod
+    def _hex_distance(a, b):
+        return (abs(a.q - b.q) + abs(a.q + a.r - b.q - b.r) + abs(a.r - b.r)) / 2
+

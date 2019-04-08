@@ -1,17 +1,19 @@
+from move import Move
 
 class AStar:
-    def __init__(self, board_dict, start_hexs, goals_hexs:
+    def __init__(self, board_dict, start_hexs, goal_hexs, obstacles):
         self._init_state = board_dict
         self._start = start_hexs
         self._goal = goal_hexs
+        self._obstacles = obstacles
 
 
     def a_star(self):
-        start = Move(None)
+        start = Move(None, self._start)
         start.set_g(0)
         start.set_h(0)
 
-        end = Move(None, goal_hexs)
+        end = Move(None, self.goal)
         end.set_g(0)
         end.set_h(0)
 
@@ -25,46 +27,59 @@ class AStar:
             curr_move = unexplored.get(curr_index)
 
             for i, move in enumerate(open):
-                if item.f() < curr.f():
+                if move.f() < curr_move.f():
                     curr_move = move
                     curr_index = i
 
             unexplored.pop(curr_index)
             explored.append(curr_move)
 
-            if curr_move.equal(end_node):
+            if curr_move.equal(end):
                 path = []
                 current = curr_move
                 while current is not None:
-                    path.append(current.position())
+                    path.append(current.state())
                     current = current.parent()
 
                 return path[::-1]
 
-        children = {}
-        for piece in curr_move.position().keys():
-            for new in piece.get_neighbours():
-                new_pos = curr_move.position()
-                new_pos.remove(piece)
-                new_pos[tuple(new.get_coordinate())] =  new
+        children = []
+        for piece in curr_move.state().values():
+            for coordinate in piece.get_neighbours():
+                action = "MOVE"
 
-                new_move = Move(curr_move, new_pos)
+                new_hex = self.board_dict[coordinate]
 
-                children[(piece, new)] = new_move
+                if self._obstacles.contains(new_hex.get_type()):
+                    new_hex = new_hex.jump(piece, self.board_dict)
 
+                    if self._is_valid_jump(new_hex):
+                        action = "JUMP"
+                    else:
+                        continue
 
+                new_state = curr_move.state()
+                new_state.remove(piece)
+                new_state[coordinate] = new_hex
 
-        pass
+                new_move = Move(curr_move, new_state, action)
 
+                children.append(new_move)
 
-    def _g(self, move):
-        # path
-        #
-        return
+        for child in children:
+            if explored.contains(child):
+                continue
 
-    def _h(self):
-        # shortest distance to goal node - #pieces/blocks in the way
-        return self._hex_distance()
+            child.set_g(curr_move.g() + child.cost)
 
-    def _hex_distance(self, a, b):
-        return (abs(a.q - b.q) + abs(a.q + a.r - b.q - b.r) + abs(a.r - b.r)) / 2
+            if unexplored.contains(child):
+                i = unexplored.index(child)
+                if child.g() > unexplored[i].g():
+                    continue
+
+            explored.append(child)
+
+    def _is_valid_jump(self, hex):
+        if self.obstacles.contains(hex.get_type()):
+            return False
+        return True
