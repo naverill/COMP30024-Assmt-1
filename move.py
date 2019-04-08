@@ -5,7 +5,7 @@ class Move:
         self._state = state # Hex
         self.action = action
         self._g = None
-        self._h = self._init_h()
+        self._h = None
         self.cost = cost
 
     def state(self):
@@ -26,15 +26,15 @@ class Move:
     def set_g(self, g):
         self._g = g
 
-    def _init_h(self):
+    def set_h(self, goals):
         # shortest distance to goal node
         path_cost = []
-        for piece in self._state.values():
+        for piece in goals.values():
             goal_dist = []
-            for goal in self._goal.values():
+            for goal in goals.values():
                 goal_dist.append(self._hex_distance(piece, goal))
             path_cost.append(min(goal_dist))
-        return sum(path_cost)
+        self._h = sum(path_cost)
 
     def get_transition(self):
         new_pos_set = set(self._state.key())
@@ -49,16 +49,15 @@ class Move:
         print("{} from {} to {}.".format(action, old_pos, new_pos))
 
     def action(self):
-        if not self._state.get_type() == "EXIT":
-            return "EXIT"
-        else:
-            return self._action
-        pass
+        # if not self._state.get_type() == "EXIT":
+        #     return "EXIT"
+        # else:
+        return self._action
 
     def __eq__(self, other):
-        return self._state.equal(self.other.state())
+        return (self._state.cmp(self.other.state()) == 0)
 
     @staticmethod
     def _hex_distance(a, b):
-        return (abs(a.q - b.q) + abs(a.q + a.r - b.q - b.r) + abs(a.r - b.r)) / 2
+        return (abs(a.q() - b.q()) + abs(a.q() + a.r() - b.q() - b.r()) + abs(a.r() - b.r())) / 2
 

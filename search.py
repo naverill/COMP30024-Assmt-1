@@ -18,7 +18,7 @@ def main():
     for q, r in [(q,r) for q in ran for r in ran if -q-r in ran]:
         board_dict[(q, r)] = Hex(q, r)
 
-    start_hexs = set()
+    start_hexs = {}
     obstacles = set()
 
     with open(sys.argv[1]) as file:
@@ -31,15 +31,16 @@ def main():
             board_dict[block].set_type("block")
             obstacles.add("blocks")
 
-        for q, r in pieces:
-            start_hexs.add(Hex(q, r, colour))
+        for piece in pieces:
+            q, r = piece
+            start_hexs[piece]  = Hex(q, r, colour)
             obstacles.add(colour)
 
     goal_hexs = find_goals(colour)
         # paths = a_star(board_dict, pieces, goal, obstace=les)
 
-    AStar(board_dict, start_hexs, goal_hexs, obstacles)
-    path = AStar.a_star()
+    search = AStar(board_dict, start_hexs, goal_hexs, obstacles)
+    path = search.a_star()
 
     output_path(path)
 
@@ -140,12 +141,18 @@ def output_paths(path):
 
 
 def find_goals(colour):
-    if colour.equals("green"):
-        return {Hex(-3,4,colour), Hex(-2,4,colour), Hex(-1,4,colour), Hex(0,4,colour)}
-    elif colour.equals("red"):
-        return {Hex(4, -3, colour), Hex(4, -2, colour), Hex(4, -1, colour), Hex(4, 0, colour)}
-    elif colour.equals("blue"):
-        return {Hex(-4, 0, colour), Hex(-1, -3, colour), Hex(-2, -2, colour), Hex(-3, -1, colour)}
+    green = [(-3, 4), (-2, 4),  (-1, 4), (0, 4)]
+    red = [(4, -3), (4, -2), (4, -1), (4, 0)]
+    blue = [(-4, 0), (-1, -3), (-2, -2), (-3, -1)]
+
+    if colour == "green":
+        coordinates = green
+    elif colour == "red":
+        coordinates = red
+    elif colour == "blue":
+        coordinates = blue
+
+    return {(q, r): Hex(q, r, "goal") for q, r in coordinates}
 
 # when this module is executed, run the `main` function:
 if __name__ == '__main__':

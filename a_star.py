@@ -1,20 +1,20 @@
 from move import Move
-from search import print_board
 
 class AStar:
     def __init__(self, board_dict, start_hexs, goal_hexs, obstacles):
         self._empty_board = board_dict
         self._start = start_hexs
-        self._goal = goal_hexs
+        self._goals = goal_hexs
         self._obstacles = obstacles
-        self._colour
 
     def a_star(self):
         start = Move(None, self._start)
         start.set_g(0)
+        start.set_h(self._goals)
 
-        end = Move(None, self.goal)
+        end = Move(None, self._goals)
         end.set_g(0)
+        end.set_h(self._goals)
 
         unexplored = []
         explored = []
@@ -23,7 +23,7 @@ class AStar:
 
         while len(unexplored) > 0:
             curr_index = 0
-            curr_move = unexplored.get(curr_index)
+            curr_move = unexplored[curr_index]
 
             for i, move in enumerate(unexplored):
                 if move.f() < curr_move.f():
@@ -33,7 +33,7 @@ class AStar:
             unexplored.pop(curr_index)
             explored.append(curr_move)
 
-            if curr_move.equal(end):
+            if curr_move == end:
                 path = []
                 current = curr_move
                 while current is not None:
@@ -43,11 +43,11 @@ class AStar:
                 return path[::-1]
 
         children = []
+        board_state = self.update_board(curr_move.state())
         for piece in curr_move.state().values():
             for coordinate in piece.get_neighbours():
                 action = "MOVE"
 
-                board_state = self.update_board(curr_move.state())
                 new_hex = board_state[coordinate]
 
                 if self._obstacles.contains(new_hex.get_type()):
@@ -71,6 +71,7 @@ class AStar:
                 continue
 
             child.set_g(curr_move.g() + child.cost)
+            child.set_h(self._goals)
 
             if unexplored.contains(child):
                 i = unexplored.index(child)
@@ -91,6 +92,6 @@ class AStar:
     def _is_valid_jump(self, hex):
         if self.obstacles.contains(hex.get_type()):
             return False
-        elif self._goal.contains(hex.get_coordinate()):
+        elif self._goals.contains(hex.get_coordinate()):
             return False
         return True
