@@ -15,22 +15,22 @@ class AStar:
         end.set_g(0)
         end.set_h(0)
 
-        open = []
-        closed = []
+        unexplored = []
+        explored = []
 
-        open.append(start)
+        unexplored.append(start)
 
         while len(open) > 0:
             curr_index = 0
-            curr_move = open.get(curr_index)
+            curr_move = unexplored.get(curr_index)
 
             for i, move in enumerate(open):
                 if item.f() < curr.f():
                     curr_move = move
                     curr_index = i
 
-            open.pop(curr_index)
-            closed.append(curr_move)
+            unexplored.pop(curr_index)
+            explored.append(curr_move)
 
             if curr_move.equal(end_node):
                 path = []
@@ -50,7 +50,7 @@ class AStar:
 
                 new_move = Move(curr_move, new_pos)
 
-                children.append(new_move)
+                children[(piece, new)] = new_move
 
 
 
