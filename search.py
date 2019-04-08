@@ -9,16 +9,15 @@ import sys
 import json
 from collections import defaultdict
 from hex import Hex
-from a_star import a_star
+from a_star import AStar
 
 def main():
     board_dict = defaultdict()
 
     ran = range(-Hex.BOARD_SIZE, +Hex.BOARD_SIZE+1)
-    cells = []
-
     for q, r in [(q,r) for q in ran for r in ran if -q-r in ran]:
         board_dict[(q, r)] = Hex(q, r)
+
     start_hexs = set()
     obstacles = set()
 
@@ -32,26 +31,25 @@ def main():
             board_dict[block].set_type("block")
             obstacles.add("blocks")
 
-        for piece in pieces:
-            #board_dict[piece].set_type(colour)
-            q, r = piece
+        for q, r in pieces:
             start_hexs.add(Hex(q, r, colour))
             obstacles.add(colour)
 
-        print_board(board_dict)
-
-
-
-        for key, piece in board_dict.items():
-            print(key, piece.get_neighbours())
     goal_hexs = find_goals(colour)
         # paths = a_star(board_dict, pieces, goal, obstace=les)
 
-    # output_paths(paths)
+    AStar(board_dict, start_hexs, goal_hexs, obstacles)
+    path = AStar.a_star()
+
+    output_path(path)
 
     # TODO: Search for and output winning sequence of moves
 
     # ...
+
+def output_path(path):
+    for move in path:
+        move.print_move()
 
 
 def print_board(board_dict, message="", debug=False, **kwargs):
@@ -140,16 +138,15 @@ def output_paths(path):
     for move in path:
         print("%s from %s to #s." % (move.action(), move.old_pos().to_coordinate_string(), move._new_pos().to_coordinate_string()))
 
-def find_goals(colour):
-    goal_hexs = set()
-    if colour.equals("green"):
-        goal_hexs = {Hex(-3,4,colour), Hex(-2,4,colour), Hex(-1,4,colour), Hex(0,4,colour)}
-    elif colour.equals("red"):
-        goal_hexs = {Hex(4, -3, colour), Hex(4, -2, colour), Hex(4, -1, colour), Hex(4, 0, colour)}
-    elif colour.equals("blue"):
-        goal_hexs = {Hex(-4, 0, colour), Hex(-1, -3, colour), Hex(-2, -2, colour), Hex(-3, -1, colour)}
 
-    return goal_hexs
+def find_goals(colour):
+    if colour.equals("green"):
+        return {Hex(-3,4,colour), Hex(-2,4,colour), Hex(-1,4,colour), Hex(0,4,colour)}
+    elif colour.equals("red"):
+        return {Hex(4, -3, colour), Hex(4, -2, colour), Hex(4, -1, colour), Hex(4, 0, colour)}
+    elif colour.equals("blue"):
+        return {Hex(-4, 0, colour), Hex(-1, -3, colour), Hex(-2, -2, colour), Hex(-3, -1, colour)}
+
 # when this module is executed, run the `main` function:
 if __name__ == '__main__':
     main()

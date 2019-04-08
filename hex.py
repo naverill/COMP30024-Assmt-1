@@ -69,10 +69,10 @@ class Hex:
                 neighbours.append(neighbour())
         return neighbours
 
-    def equal(self, other):
+    def __eq__(self, other):
         return self._q == other.q() and self._r == other.r()
 
-    def jump(self, neighbour, board, obstacles):
+    def jump(self, neighbour, board):
         opposite = self._opposite_neighbour(neighbour)
         opposite_hex = board[opposite]
         return opposite_hex

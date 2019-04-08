@@ -26,7 +26,7 @@ class Move:
     def set_g(self, g):
         self._g = g
 
-    def _init_h(self, h):
+    def _init_h(self):
         # shortest distance to goal node
         path_cost = []
         for piece in self._state.values():
@@ -36,7 +36,7 @@ class Move:
             path_cost.append(min(goal_dist))
         return sum(path_cost)
 
-    def get_moved_piece(self):
+    def get_transition(self):
         new_pos_set = set(self._state.key())
         old_pos_set = set(self._parent.state().key())
         old_pos = old_pos_set.difference(new_pos_set)
@@ -44,7 +44,7 @@ class Move:
         return old_pos, new_pos
 
     def print_move(self):
-        old_pos, new_pos = self.get_moved_piece()
+        old_pos, new_pos = self.get_transition()
         action = self.action()
         print("{} from {} to {}.".format(action, old_pos, new_pos))
 

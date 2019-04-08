@@ -1,4 +1,5 @@
 from move import Move
+from search import print_board
 
 class AStar:
     def __init__(self, board_dict, start_hexs, goal_hexs, obstacles):
@@ -6,28 +7,25 @@ class AStar:
         self._start = start_hexs
         self._goal = goal_hexs
         self._obstacles = obstacles
-
-
+        self._colour
 
     def a_star(self):
         start = Move(None, self._start)
         start.set_g(0)
-        start.set_h(0)
 
         end = Move(None, self.goal)
         end.set_g(0)
-        end.set_h(0)
 
         unexplored = []
         explored = []
 
         unexplored.append(start)
 
-        while len(open) > 0:
+        while len(unexplored) > 0:
             curr_index = 0
             curr_move = unexplored.get(curr_index)
 
-            for i, move in enumerate(open):
+            for i, move in enumerate(unexplored):
                 if move.f() < curr_move.f():
                     curr_move = move
                     curr_index = i
@@ -39,7 +37,7 @@ class AStar:
                 path = []
                 current = curr_move
                 while current is not None:
-                    path.append(current.state())
+                    path.append(current)
                     current = current.parent()
 
                 return path[::-1]
@@ -82,5 +80,7 @@ class AStar:
 
     def _is_valid_jump(self, hex):
         if self.obstacles.contains(hex.get_type()):
+            return False
+        elif self._goal.contains(hex.get_coordinate()):
             return False
         return True
