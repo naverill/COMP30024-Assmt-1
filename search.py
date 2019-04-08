@@ -16,10 +16,12 @@ def main():
 
     ran = range(-Hex.BOARD_SIZE, +Hex.BOARD_SIZE+1)
     cells = []
+
     for q, r in [(q,r) for q in ran for r in ran if -q-r in ran]:
         board_dict[(q, r)] = Hex(q, r)
     start_hexs = set()
     obstacles = set()
+
     with open(sys.argv[1]) as file:
         data = json.load(file)
         blocks = [tuple(l) for l in data['blocks']]
@@ -37,10 +39,12 @@ def main():
             obstacles.add(colour)
 
         print_board(board_dict)
-        
+
+
+
         for key, piece in board_dict.items():
             print(key, piece.get_neighbours())
-
+    goal_hexs = find_goals(colour)
         # paths = a_star(board_dict, pieces, goal, obstace=les)
 
     # output_paths(paths)
@@ -136,7 +140,16 @@ def output_paths(path):
     for move in path:
         print("%s from %s to #s." % (move.action(), move.old_pos().to_coordinate_string(), move._new_pos().to_coordinate_string()))
 
+def find_goals(colour):
+    goal_hexs = set()
+    if colour.equals("green"):
+        goal_hexs = {Hex(-3,4,colour), Hex(-2,4,colour), Hex(-1,4,colour), Hex(0,4,colour)}
+    elif colour.equals("red"):
+        goal_hexs = {Hex(4, -3, colour), Hex(4, -2, colour), Hex(4, -1, colour), Hex(4, 0, colour)}
+    elif colour.equals("blue"):
+        goal_hexs = {Hex(-4, 0, colour), Hex(-1, -3, colour), Hex(-2, -2, colour), Hex(-3, -1, colour)}
 
+    return goal_hexs
 # when this module is executed, run the `main` function:
 if __name__ == '__main__':
     main()
