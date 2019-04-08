@@ -18,11 +18,11 @@ def main():
     cells = []
     for q, r in [(q,r) for q in ran for r in ran if -q-r in ran]:
         board_dict[(q, r)] = Hex(q, r)
-
+    start_hexs = set()
     obstacles = set()
     with open(sys.argv[1]) as file:
         data = json.load(file)
-        blocks  = [tuple(l) for l in data['blocks']]
+        blocks = [tuple(l) for l in data['blocks']]
         pieces = [tuple(l) for l in data['pieces']]
         colour = data["colour"]
 
@@ -31,11 +31,13 @@ def main():
             obstacles.add("blocks")
 
         for piece in pieces:
-            board_dict[piece].set_type(colour)
+            #board_dict[piece].set_type(colour)
+            q, r = piece
+            start_hexs.add(Hex(q, r, colour))
             obstacles.add(colour)
 
         print_board(board_dict)
-
+        
         for key, piece in board_dict.items():
             print(key, piece.get_neighbours())
 

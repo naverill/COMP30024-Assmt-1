@@ -8,6 +8,7 @@ class AStar:
         self._obstacles = obstacles
 
 
+
     def a_star(self):
         start = Move(None, self._start)
         start.set_g(0)
