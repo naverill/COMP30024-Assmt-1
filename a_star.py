@@ -3,7 +3,7 @@ from search import print_board
 
 class AStar:
     def __init__(self, board_dict, start_hexs, goal_hexs, obstacles):
-        self._init_state = board_dict
+        self._empty_board = board_dict
         self._start = start_hexs
         self._goal = goal_hexs
         self._obstacles = obstacles
@@ -47,10 +47,11 @@ class AStar:
             for coordinate in piece.get_neighbours():
                 action = "MOVE"
 
-                new_hex = self.board_dict[coordinate]
+                board_state = self.update_board(curr_move.state())
+                new_hex = board_state[coordinate]
 
                 if self._obstacles.contains(new_hex.get_type()):
-                    new_hex = new_hex.jump(piece, self.board_dict)
+                    new_hex = new_hex.jump(piece, board_state)
 
                     if self._is_valid_jump(new_hex):
                         action = "JUMP"
@@ -77,6 +78,15 @@ class AStar:
                     continue
 
             explored.append(child)
+
+    def update_board(self, state):
+        board = self._empty_board.copy()
+
+        for hex in state:
+            coordinate = hex.get_coordinate()
+            board[coordinate] = hex
+
+        return board
 
     def _is_valid_jump(self, hex):
         if self.obstacles.contains(hex.get_type()):
