@@ -54,10 +54,7 @@ class AStar:
     def update_board(self, state):
         board = {key: value.copy() for key, value in self._empty_board.items()}
 
-        # board.update(state)
         for hex in state:
-            coordinate = hex.get_coordinate()
-            board[coordinate] = hex
+            board[hex.get_coordinate()] = hex
 
-        # search.print_board(board)
         return board

@@ -8,6 +8,36 @@ class Hex:
         self._type = type
         self._neighbours = [self.left, self.right, self.top_left, self.top_right, self.bottom_left, self.bottom_right]
 
+    @staticmethod
+    def is_valid(q, r):
+        ran = range(-Hex.BOARD_SIZE, Hex.BOARD_SIZE + 1)
+        return (-q - r in ran \
+                and -Hex.BOARD_SIZE <= q <= Hex.BOARD_SIZE \
+                and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE)
+
+    def get_neighbours(self):
+        neighbours = []
+        for neighbour in self._neighbours:
+            if neighbour():
+                neighbours.append(neighbour())
+        return neighbours
+
+    def jump(self, obstacle, board):
+        opposite = self._opposite_neighbour(obstacle)
+
+        if self.is_valid(opposite[0], opposite[1]):
+            return board[opposite]
+        else:
+            return None
+
+    def _opposite_neighbour(self, neighbour):
+        dist_q = neighbour.q() - self.q()
+        dist_r = neighbour.r() - self.r()
+        return neighbour.q() + dist_q, neighbour.r() + dist_r
+
+    def copy(self):
+        return Hex(self._q, self._r, self._type)
+
     def get_type(self):
         return self._type
 
@@ -62,34 +92,6 @@ class Hex:
             return None
         return self._q, self._r + 1
 
-    def get_neighbours(self):
-        neighbours = []
-        for neighbour in self._neighbours:
-            if neighbour():
-                neighbours.append(neighbour())
-        return neighbours
-
-    def jump(self, obstacle, board):
-        opposite = self._opposite_neighbour(obstacle)
-
-        if self.is_valid(opposite[0], opposite[1]):
-            return board[opposite]
-        else:
-            return None
-
-    def _opposite_neighbour(self, neighbour):
-        dist_q = neighbour.q() - self.q()
-        dist_r = neighbour.r() - self.r()
-        return neighbour.q() + dist_q, neighbour.r() + dist_r
-
-
-    @staticmethod
-    def is_valid(q, r):
-        ran = range(-Hex.BOARD_SIZE, Hex.BOARD_SIZE + 1)
-        return (-q-r in ran \
-               and -Hex.BOARD_SIZE <= q <= Hex.BOARD_SIZE \
-               and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE)
-
     def __eq__(self, other):
         return self._q == other.q() and self._r == other.r()
 
@@ -98,6 +100,3 @@ class Hex:
 
     def __gt__(self, other):
         return self._q > other.q() or (self._q == other.q() and self._r > other.r())
-
-    def copy(self):
-        return Hex(self._q, self._r, self._type)

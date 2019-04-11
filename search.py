@@ -42,18 +42,23 @@ def main():
     search = a_star.AStar(board_dict, start_hexs, goal_hexs, obstacles)
     path = search.a_star()
 
-    output_paths(path)
+    output_paths(path, board_dict)
 
     # TODO: Search for and output winning sequence of moves
 
     # ...
 
-def output_paths(path):
+def output_paths(path, empty_board=None):
     if path is None:
         print("Empty path")
         return
     for move in path:
         move.print_move()
+
+        if empty_board:
+            board = {key: value.copy() for key, value in empty_board.items()}
+            board.update(move.state())
+            print_board(board)
 
 
 def print_board(board_dict, message="", debug=False, **kwargs):
@@ -136,14 +141,6 @@ def print_board(board_dict, message="", debug=False, **kwargs):
     # fill in the template to create the board drawing, then print!
     board = template.format(message, *cells)
     print(board, **kwargs)
-
-
-# def output_paths(path):
-#     if path is not None:
-#         for move in path:
-#             print("%s from %s to %s." % (move.action(), move.old_pos().get_coordinate_string(), move._new_pos().get_coordinate_string()))
-#     else:
-#         print("Invalid path")
 
 def find_goals(colour):
     green = [(-3, 4), (-2, 4),  (-1, 4), (0, 4)]
