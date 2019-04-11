@@ -29,7 +29,7 @@ def main():
 
         for block in blocks:
             board_dict[block].set_type("block")
-            obstacles.add("blocks")
+            obstacles.add("block")
 
         for piece in pieces:
             q, r = piece

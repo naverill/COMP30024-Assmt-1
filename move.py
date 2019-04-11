@@ -72,7 +72,6 @@ class Move:
                 new_hex = self._get_hex(coordinate, board)
 
                 if new_hex.get_type() in obstacles:
-                    print("JUMP")
                     new_hex = new_hex.jump(piece, board)
 
                     if self._is_valid_jump(new_hex, obstacles):
