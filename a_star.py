@@ -39,18 +39,18 @@ class AStar:
                 while current is not None:
                     path.append(current)
                     current = current.parent()
-
+               # print(path)
                 return path[::-1]
 
         children = []
-        board_state = self.update_board(curr_move.state())
+        board_state = self.update_board(curr_move.state().values())
         for piece in curr_move.state().values():
             for coordinate in piece.get_neighbours():
                 action = "MOVE"
 
                 new_hex = board_state[coordinate]
 
-                if self._obstacles.contains(new_hex.get_type()):
+                if new_hex.get_type() in self._obstacles:
                     new_hex = new_hex.jump(piece, board_state)
 
                     if self._is_valid_jump(new_hex):
@@ -58,8 +58,16 @@ class AStar:
                     else:
                         continue
 
-                new_state = curr_move.state()
-                new_state.remove(piece)
+                new_state = dict(curr_move.state())
+
+               # point = piece.get_coordinate()
+                #TODO: Get the key for the piece value and pop that
+                for key, value in curr_move.state().items():
+                    if value == piece:
+                       p_key = key
+
+                del new_state[p_key]
+                #new_state.pop(piece_key)
                 new_state[coordinate] = new_hex
 
                 new_move = Move(curr_move, new_state, action)
@@ -67,13 +75,13 @@ class AStar:
                 children.append(new_move)
 
         for child in children:
-            if explored.contains(child):
+            if child in explored:
                 continue
 
             child.set_g(curr_move.g() + child.cost)
             child.set_h(self._goals)
 
-            if unexplored.contains(child):
+            if child in unexplored:
                 i = unexplored.index(child)
                 if child.g() > unexplored[i].g():
                     continue
@@ -84,14 +92,15 @@ class AStar:
         board = self._empty_board.copy()
 
         for hex in state:
+            #print(hex)
             coordinate = hex.get_coordinate()
             board[coordinate] = hex
 
         return board
 
     def _is_valid_jump(self, hex):
-        if self.obstacles.contains(hex.get_type()):
+        if hex.get_type() in self._obstacles:
             return False
-        elif self._goals.contains(hex.get_coordinate()):
+        elif hex.get_coordinate() in self._goals:
             return False
         return True

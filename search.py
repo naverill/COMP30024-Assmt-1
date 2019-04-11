@@ -33,7 +33,7 @@ def main():
 
         for piece in pieces:
             q, r = piece
-            start_hexs[piece]  = Hex(q, r, colour)
+            start_hexs[piece] = Hex(q, r, colour)
             obstacles.add(colour)
 
     goal_hexs = find_goals(colour)
@@ -41,8 +41,8 @@ def main():
 
     search = AStar(board_dict, start_hexs, goal_hexs, obstacles)
     path = search.a_star()
-
-    output_path(path)
+    print(path)
+    output_paths(path)
 
     # TODO: Search for and output winning sequence of moves
 
@@ -136,9 +136,11 @@ def print_board(board_dict, message="", debug=False, **kwargs):
 
 
 def output_paths(path):
-    for move in path:
-        print("%s from %s to #s." % (move.action(), move.old_pos().to_coordinate_string(), move._new_pos().to_coordinate_string()))
-
+    if path is not None:
+        for move in path:
+            print("%s from %s to %s." % (move.action(), move.old_pos().get_coordinate_string(), move._new_pos().get_coordinate_string()))
+    else:
+        print("rip")
 
 def find_goals(colour):
     green = [(-3, 4), (-2, 4),  (-1, 4), (0, 4)]

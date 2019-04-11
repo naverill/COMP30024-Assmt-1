@@ -79,8 +79,10 @@ class Hex:
 
     def _opposite_neighbour(self, neighbour):
         #todo(naverill) test
-        dist = self.get_coordinate() - neighbour.get_coordinate()
-        return self.get_coordinate() + dist
+        dist_q = neighbour.q() - self.q()
+        dist_r = neighbour.r() - self.r()
+        #dist = self.get_coordinate() - neighbour.get_coordinate()
+        return neighbour.q() + dist_q, neighbour.r() + dist_r
 
 
     @staticmethod

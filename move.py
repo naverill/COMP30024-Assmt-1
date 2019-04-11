@@ -54,8 +54,8 @@ class Move:
         # else:
         return self._action
 
-    def __eq__(self, other):
-        return (self._state.cmp(self.other.state()) == 0)
+    #def __eq__(self, other):
+     #   return self.state == self.other.state
 
     @staticmethod
     def _hex_distance(a, b):
