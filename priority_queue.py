@@ -32,8 +32,3 @@ class PriorityQueue:
                 return index
         return -1
 
-    def print_costs(self):
-        for item in self._elements:
-            print(item[0], item[1].f())
-        print()
-

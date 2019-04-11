@@ -38,11 +38,10 @@ def main():
 
     print_board(board_dict, debug=True)
     goal_hexs = find_goals(colour)
-        # paths = a_star(board_dict, pieces, goal, obstace=les)
 
     search = a_star.AStar(board_dict, start_hexs, goal_hexs, obstacles)
     path = search.a_star()
-    print(path)
+
     output_paths(path)
 
     # TODO: Search for and output winning sequence of moves

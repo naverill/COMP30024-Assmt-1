@@ -24,7 +24,7 @@ class AStar:
             # print(frontier.len())
             # print([move.get_transition() for move in frontier])
             curr_move = frontier.get()
-            print(curr_move.f())
+            # print(curr_move.f())
             # print(curr_move.get_transition())
             explored.append(curr_move)
 

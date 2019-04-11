@@ -76,17 +76,18 @@ class Move:
 
                 new_hex = self._get_hex(coordinate, board)
 
-                if new_hex.get_type() in obstacles:
-                    new_hex = new_hex.jump(piece, board)
+                if new_hex.get_coordinate() in self._goals.keys():
+                    new_hex.set_type("goal")
+                    action = "EXIT"
+                elif new_hex.get_type() in obstacles:
+                    new_hex = piece.jump(new_hex, board)
 
                     if self._is_valid_jump(new_hex, obstacles):
                         action = "JUMP"
                     else:
                         continue
                 new_hex.set_type("red") #todo(naverill) change from hard-coding
-
-                if new_hex.get_coordinate() in self._goals.keys():
-                    action = "EXIT"
+                    # new_hex.set_type('')
 
                 new_state = {key: value for key, value in self._state.items()}
                 # print(new_state.keys())

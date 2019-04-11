@@ -81,7 +81,6 @@ class Hex:
         #todo(naverill) test
         dist_q = neighbour.q() - self.q()
         dist_r = neighbour.r() - self.r()
-        #dist = self.get_coordinate() - neighbour.get_coordinate()
         return neighbour.q() + dist_q, neighbour.r() + dist_r
 
 
@@ -90,8 +89,7 @@ class Hex:
         ran = range(-Hex.BOARD_SIZE, Hex.BOARD_SIZE + 1)
         return (-q-r in ran \
                and -Hex.BOARD_SIZE <= q <= Hex.BOARD_SIZE \
-               and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE)  #coordinate equal to exit piece
-
+               and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE)
 
     def __eq__(self, other):
         return self._q == other.q() and self._r == other.r()
