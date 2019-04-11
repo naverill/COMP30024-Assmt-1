@@ -22,6 +22,7 @@ class AStar:
             print(frontier.len())
             # print([move.get_transition() for move in frontier])
             curr_move = frontier.get()
+            print(curr_move.state().keys())
             explored.append(curr_move)
 
             if curr_move.end():
@@ -38,10 +39,9 @@ class AStar:
                 child.set_g(curr_move.g() + child.cost)
                 child.set_h()
 
-                # if child in frontier:
-                #     i = frontier.index(child)
-                #     if child.g() > frontier[i].g():
-                #         continue
+                if child in frontier:
+                    if child.g() > frontier.get(child).g():
+                        continue
 
                 frontier.put(child, child.f())
 

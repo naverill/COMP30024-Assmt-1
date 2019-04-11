@@ -11,7 +11,10 @@ class PriorityQueue:
     def put(self, item, priority):
         heapq.heappush(self._elements, (priority, item))
 
-    def get(self):
+    def get(self, state=None):
+        if state:
+            index = self.index(state)
+            return self._elements[index][1]
         return heapq.heappop(self._elements)[1]
 
     def len(self):
@@ -22,9 +25,6 @@ class PriorityQueue:
             if other == item[1]:
                 return True
         return False
-
-    def __index__(self, i):
-        return self._elements[i][1]
 
     def index(self, item):
         for index, elem in enumerate(self._elements):
