@@ -1,5 +1,6 @@
 from move import Move
 from priority_queue import PriorityQueue
+import search
 
 class AStar:
     def __init__(self, board_dict, start_hexs, goal_hexs, obstacles):
@@ -20,6 +21,7 @@ class AStar:
 
         while not frontier.empty():
             # frontier.print_costs()
+            print(frontier.len())
             # print([move.get_transition() for move in frontier])
             curr_move = frontier.get()
             # print(curr_move.get_transition())
@@ -61,4 +63,5 @@ class AStar:
             coordinate = hex.get_coordinate()
             board[coordinate] = hex
 
+        search.print_board(board)
         return board

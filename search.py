@@ -9,7 +9,7 @@ import sys
 import json
 from collections import defaultdict
 from hex import Hex
-from a_star import AStar
+import a_star
 
 def main():
     board_dict = defaultdict()
@@ -40,7 +40,7 @@ def main():
     goal_hexs = find_goals(colour)
         # paths = a_star(board_dict, pieces, goal, obstace=les)
 
-    search = AStar(board_dict, start_hexs, goal_hexs, obstacles)
+    search = a_star.AStar(board_dict, start_hexs, goal_hexs, obstacles)
     path = search.a_star()
     print(path)
     output_paths(path)

@@ -31,16 +31,17 @@ class Move:
     def set_h(self):
         # shortest distance to goal node
         path_cost = []
-        for piece in self._goals.values():
+        for piece in self._state.values():
             goal_dist = []
             for goal in self._goals.values():
                 goal_dist.append(self._hex_distance(piece, goal))
             path_cost.append(min(goal_dist))
+
         self._h = sum(path_cost)
 
     def get_transition(self):
         if not self._parent:
-            return None
+            return None, None
         new_pos_set = set(self._state.keys())
         old_pos_set = set(self._parent.state().keys())
         old_pos = old_pos_set.difference(new_pos_set)
@@ -49,7 +50,9 @@ class Move:
 
     def print_move(self):
         old_pos, new_pos = self.get_transition()
-        action = self.action()
+        if not old_pos or not new_pos:
+            return
+        action = self.action
         print("{} from {} to {}.".format(action, old_pos, new_pos))
 
     def action(self):
@@ -91,8 +94,6 @@ class Move:
                 new_move = Move(self, new_state, self._goals, action)
 
                 children.append(new_move)
-        print(self._state.keys())
-        print("children:", len(children))
 
         return children
 
@@ -122,7 +123,7 @@ class Move:
 
     @staticmethod
     def _hex_distance(a, b):
-        return (abs(a.q() - b.q()) + abs(a.q() + a.r() - b.q() - b.r()) + abs(a.r() - b.r())) / 2
+        return float((abs(a.q() - b.q()) + abs(a.q() + a.r() - b.q() - b.r()) + abs(a.r() - b.r()))) / 2.0
 
     def __eq__(self, other):
         # return sorted(self._state.keys()) == sorted(other.state().keys())

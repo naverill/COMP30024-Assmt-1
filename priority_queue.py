@@ -38,6 +38,6 @@ class PriorityQueue:
 
     def print_costs(self):
         for item in self._elements:
-            print(item[1].f())
+            print(item[0], item[1].f())
         print()
 
