@@ -36,6 +36,7 @@ def main():
             start_hexs[piece] = Hex(q, r, colour)
             obstacles.add(colour)
 
+    print_board(board_dict, debug=True)
     goal_hexs = find_goals(colour)
         # paths = a_star(board_dict, pieces, goal, obstace=les)
 
@@ -48,7 +49,10 @@ def main():
 
     # ...
 
-def output_path(path):
+def output_paths(path):
+    if path is None:
+        print("Empty path")
+        return
     for move in path:
         move.print_move()
 
@@ -135,12 +139,12 @@ def print_board(board_dict, message="", debug=False, **kwargs):
     print(board, **kwargs)
 
 
-def output_paths(path):
-    if path is not None:
-        for move in path:
-            print("%s from %s to %s." % (move.action(), move.old_pos().get_coordinate_string(), move._new_pos().get_coordinate_string()))
-    else:
-        print("rip")
+# def output_paths(path):
+#     if path is not None:
+#         for move in path:
+#             print("%s from %s to %s." % (move.action(), move.old_pos().get_coordinate_string(), move._new_pos().get_coordinate_string()))
+#     else:
+#         print("Invalid path")
 
 def find_goals(colour):
     green = [(-3, 4), (-2, 4),  (-1, 4), (0, 4)]

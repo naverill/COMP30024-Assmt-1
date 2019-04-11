@@ -74,8 +74,11 @@ class Hex:
 
     def jump(self, neighbour, board):
         opposite = self._opposite_neighbour(neighbour)
-        opposite_hex = board[opposite]
-        return opposite_hex
+
+        if self.is_valid(opposite[0], opposite[1]):
+            return board[opposite]
+        else:
+            return None
 
     def _opposite_neighbour(self, neighbour):
         #todo(naverill) test
