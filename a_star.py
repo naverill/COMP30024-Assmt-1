@@ -22,7 +22,7 @@ class AStar:
             print(frontier.len())
             # print([move.get_transition() for move in frontier])
             curr_move = frontier.get()
-            print(curr_move.state().keys())
+            # print(curr_move.get_transition())
             explored.append(curr_move)
 
             if curr_move.end():
@@ -32,7 +32,6 @@ class AStar:
             children = curr_move.get_children(board_state, self._obstacles)
 
             for child in children:
-
                 if child in explored:
                     continue
 
@@ -40,8 +39,10 @@ class AStar:
                 child.set_h()
 
                 if child in frontier:
-                    if child.g() > frontier.get(child).g():
+                    if child.g() >= frontier.get(child).g():
                         continue
+                    elif child.g() < frontier.get(child).g():
+                        frontier.remove(child)
 
                 frontier.put(child, child.f())
 

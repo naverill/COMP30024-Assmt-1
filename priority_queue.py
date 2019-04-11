@@ -32,5 +32,9 @@ class PriorityQueue:
                 return index
         return -1
 
+    def remove(self, item):
+        index = self.index(item)
+        self._elements.pop(index)
+
 
 

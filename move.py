@@ -59,7 +59,7 @@ class Move:
         return self._action
 
     def end(self):
-        return all([coordinate in self._goals.keys() for coordinate in self._state])
+        return all([coordinate in self._goals.keys() for coordinate in self._state.keys()])
 
     def get_children(self, board, obstacles):
         children = []
@@ -121,6 +121,9 @@ class Move:
     @staticmethod
     def _hex_distance(a, b):
         return (abs(a.q() - b.q()) + abs(a.q() + a.r() - b.q() - b.r()) + abs(a.r() - b.r())) / 2
+
+    def __contains__(self, item):
+        return any([move == item for move in])
 
     def __eq__(self, other):
         return sorted(self._state.keys()) == sorted(other.state().keys())
