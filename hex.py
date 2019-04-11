@@ -69,9 +69,6 @@ class Hex:
                 neighbours.append(neighbour())
         return neighbours
 
-    def __eq__(self, other):
-        return self._q == other.q() and self._r == other.r()
-
     def jump(self, neighbour, board):
         opposite = self._opposite_neighbour(neighbour)
 
@@ -94,3 +91,13 @@ class Hex:
         return (-q-r in ran \
                and -Hex.BOARD_SIZE <= q <= Hex.BOARD_SIZE \
                and - Hex.BOARD_SIZE <= r <= Hex.BOARD_SIZE)  #coordinate equal to exit piece
+
+
+    def __eq__(self, other):
+        return self._q == other.q() and self._r == other.r()
+
+    def __lt__(self, other):
+        return self._q < other.q() or (self._q == other.q() and self._r < other.r())
+
+    def __gt__(self, other):
+        return self._q > other.q() or (self._q == other.q() and self._r > other.r())

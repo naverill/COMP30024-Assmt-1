@@ -36,5 +36,8 @@ class PriorityQueue:
         index = self.index(item)
         self._elements.pop(index)
 
-
+    def print_costs(self):
+        for item in self._elements:
+            print(item[1].f())
+        print()
 

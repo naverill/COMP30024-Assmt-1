@@ -72,6 +72,7 @@ class Move:
                 new_hex = self._get_hex(coordinate, board)
 
                 if new_hex.get_type() in obstacles:
+                    print("JUMP")
                     new_hex = new_hex.jump(piece, board)
 
                     if self._is_valid_jump(new_hex, obstacles):
@@ -91,6 +92,8 @@ class Move:
                 new_move = Move(self, new_state, self._goals, action)
 
                 children.append(new_move)
+        print(self._state.keys())
+        print("children:", len(children))
 
         return children
 
@@ -122,15 +125,13 @@ class Move:
     def _hex_distance(a, b):
         return (abs(a.q() - b.q()) + abs(a.q() + a.r() - b.q() - b.r()) + abs(a.r() - b.r())) / 2
 
-    def __contains__(self, item):
-        return any([move == item for move in])
-
     def __eq__(self, other):
-        return sorted(self._state.keys()) == sorted(other.state().keys())
+        # return sorted(self._state.keys()) == sorted(other.state().keys())
+        return sorted(self.state().values()) == sorted(other.state().values())
 
     def __lt__(self, other):
-        return sorted(self._state.keys()) < sorted(other.state().keys())
+        return sorted(self.state().values()) < sorted(other.state().values())
 
     def __gt__(self, other):
-        return sorted(self._state.keys()) > sorted(other.state().keys())
+        return sorted(self.state().values()) > sorted(other.state().values())
 

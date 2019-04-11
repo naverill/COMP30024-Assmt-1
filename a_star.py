@@ -19,7 +19,7 @@ class AStar:
         frontier.put(start, start.f())
 
         while not frontier.empty():
-            print(frontier.len())
+            # frontier.print_costs()
             # print([move.get_transition() for move in frontier])
             curr_move = frontier.get()
             # print(curr_move.get_transition())
@@ -39,10 +39,8 @@ class AStar:
                 child.set_h()
 
                 if child in frontier:
-                    if child.g() >= frontier.get(child).g():
+                    if child.g() > frontier.get(child).g():
                         continue
-                    elif child.g() < frontier.get(child).g():
-                        frontier.remove(child)
 
                 frontier.put(child, child.f())
 
