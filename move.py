@@ -50,10 +50,13 @@ class Move:
 
     def print_move(self):
         old_pos, new_pos = self.get_transition()
-        if not old_pos or not new_pos:
+        if not old_pos:
             return
         action = self.action
-        print("{} from {} to {}.".format(action, old_pos, new_pos))
+        if action == "EXIT":
+            print("{} from {}.".format(action, list(old_pos)[0]))
+        else:
+            print("{} from {} to {}.".format(action, list(old_pos)[0], list(new_pos)[0]))
 
     def action(self):
         return self._action
@@ -63,9 +66,8 @@ class Move:
 
     def get_children(self, board, obstacles):
         children = []
-        # print(self._state.keys())
-        for piece in self._state.values():
 
+        for piece in self._state.values():
             if piece.get_coordinate() in self._goals:
                 continue
 
@@ -84,11 +86,11 @@ class Move:
                     else:
                         continue
 
-                type = "goal" if self._is_goal(new_hex) else "red"
+                type = "goal" if self._is_goal(new_hex) else piece.get_type()
                 new_hex.set_type(type)
 
                 new_state = {key: value for key, value in self._state.items()}
-                # print(new_state.keys())
+
                 new_state.pop(piece.get_coordinate())
 
                 new_state[new_hex.get_coordinate()] = new_hex
@@ -113,7 +115,6 @@ class Move:
 
     def _is_goal(self, piece):
         return piece.get_coordinate() in self._goals.keys()
-
 
     def _is_valid_jump(self, hex, obstacles):
         if hex is None:

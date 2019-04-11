@@ -38,7 +38,7 @@ def main():
 
     print_board(board_dict, debug=True)
     goal_hexs = find_goals(colour)
-
+    print(start_hexs.keys())
     search = a_star.AStar(board_dict, start_hexs, goal_hexs, obstacles)
     path = search.a_star()
 
