@@ -56,9 +56,6 @@ class Move:
         print("{} from {} to {}.".format(action, old_pos, new_pos))
 
     def action(self):
-        # if not self._state.get_type() == "EXIT":
-        #     return "EXIT"
-        # else:
         return self._action
 
     def end(self):
@@ -68,16 +65,16 @@ class Move:
         children = []
         # print(self._state.keys())
         for piece in self._state.values():
+
             if piece.get_coordinate() in self._goals:
                 continue
-            # print(piece.get_coordinate())
+
             for coordinate in self._get_neighbours(piece):
                 action = "MOVE"
 
                 new_hex = self._get_hex(coordinate, board)
 
-                if new_hex.get_coordinate() in self._goals.keys():
-                    new_hex.set_type("goal")
+                if self._is_goal(new_hex):
                     action = "EXIT"
                 elif new_hex.get_type() in obstacles:
                     new_hex = piece.jump(new_hex, board)
@@ -86,8 +83,9 @@ class Move:
                         action = "JUMP"
                     else:
                         continue
-                new_hex.set_type("red") #todo(naverill) change from hard-coding
-                    # new_hex.set_type('')
+
+                type = "goal" if self._is_goal(new_hex) else "red"
+                new_hex.set_type(type)
 
                 new_state = {key: value for key, value in self._state.items()}
                 # print(new_state.keys())
@@ -112,6 +110,10 @@ class Move:
 
     def _get_hex(self, coordinate, board):
         return board[coordinate].copy() if board.get(coordinate) else self._goals.get(coordinate).copy()
+
+    def _is_goal(self, piece):
+        return piece.get_coordinate() in self._goals.keys()
+
 
     def _is_valid_jump(self, hex, obstacles):
         if hex is None:

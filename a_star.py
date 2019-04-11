@@ -20,12 +20,7 @@ class AStar:
         frontier.put(start, start.f())
 
         while not frontier.empty():
-            # frontier.print_costs()
-            # print(frontier.len())
-            # print([move.get_transition() for move in frontier])
             curr_move = frontier.get()
-            # print(curr_move.f())
-            # print(curr_move.get_transition())
             explored.append(curr_move)
 
             if curr_move.end():
@@ -49,11 +44,11 @@ class AStar:
 
         path = []
         current = curr_move
-        # print(curr_move)
+
         while current is not None:
             path.append(current)
             current = current.parent()
-        # print(path)
+
         return path[::-1]
 
     def update_board(self, state):

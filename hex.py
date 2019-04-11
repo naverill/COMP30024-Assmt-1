@@ -69,8 +69,8 @@ class Hex:
                 neighbours.append(neighbour())
         return neighbours
 
-    def jump(self, neighbour, board):
-        opposite = self._opposite_neighbour(neighbour)
+    def jump(self, obstacle, board):
+        opposite = self._opposite_neighbour(obstacle)
 
         if self.is_valid(opposite[0], opposite[1]):
             return board[opposite]
@@ -78,7 +78,6 @@ class Hex:
             return None
 
     def _opposite_neighbour(self, neighbour):
-        #todo(naverill) test
         dist_q = neighbour.q() - self.q()
         dist_r = neighbour.r() - self.r()
         return neighbour.q() + dist_q, neighbour.r() + dist_r
