@@ -1,7 +1,7 @@
 import copy
 
 class Move:
-    def __init__(self, parent, state, goals, action='', cost=1):
+    def __init__(self, parent, state, goals, action='', cost=0.5):
         self._parent = parent   # Move
         self._state = state # Hex
         self._goals = goals
@@ -68,6 +68,8 @@ class Move:
         children = []
         # print(self._state.keys())
         for piece in self._state.values():
+            if piece.get_coordinate() in self._goals:
+                continue
             # print(piece.get_coordinate())
             for coordinate in self._get_neighbours(piece):
                 action = "MOVE"
@@ -81,6 +83,7 @@ class Move:
                         action = "JUMP"
                     else:
                         continue
+                new_hex.set_type("red") #todo(naverill) change from hard-coding
 
                 if new_hex.get_coordinate() in self._goals.keys():
                     action = "EXIT"
@@ -107,7 +110,7 @@ class Move:
         return neighbours
 
     def _get_hex(self, coordinate, board):
-        return board[coordinate] if board.get(coordinate) else self._goals.get(coordinate)
+        return board[coordinate].copy() if board.get(coordinate) else self._goals.get(coordinate).copy()
 
     def _is_valid_jump(self, hex, obstacles):
         if hex is None:

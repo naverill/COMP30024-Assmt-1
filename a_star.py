@@ -21,9 +21,10 @@ class AStar:
 
         while not frontier.empty():
             # frontier.print_costs()
-            print(frontier.len())
+            # print(frontier.len())
             # print([move.get_transition() for move in frontier])
             curr_move = frontier.get()
+            print(curr_move.f())
             # print(curr_move.get_transition())
             explored.append(curr_move)
 
@@ -56,12 +57,12 @@ class AStar:
         return path[::-1]
 
     def update_board(self, state):
-        board = self._empty_board.copy()
+        board = {key: value.copy() for key, value in self._empty_board.items()}
 
+        # board.update(state)
         for hex in state:
-            #print(hex)
             coordinate = hex.get_coordinate()
             board[coordinate] = hex
 
-        search.print_board(board)
+        # search.print_board(board)
         return board

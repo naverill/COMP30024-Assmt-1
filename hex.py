@@ -101,3 +101,6 @@ class Hex:
 
     def __gt__(self, other):
         return self._q > other.q() or (self._q == other.q() and self._r > other.r())
+
+    def copy(self):
+        return Hex(self._q, self._r, self._type)
