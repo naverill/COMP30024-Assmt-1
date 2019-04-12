@@ -54,6 +54,10 @@ class AStar:
         path = []
         current = curr_move  # get current state of the board
         while current is not None:  # loop until a node has a null parent i.e. start node
+            # print("f:", current.f())
+            # print("g:", current.g())
+            # print("h:", current.h())
+            # print()
             path.append(current)  # add node to final path
             current = current.parent()
 
@@ -62,7 +66,7 @@ class AStar:
     def update_board(self, state):
         board = {key: value.copy() for key, value in self._empty_board.items()}
 
-        for hex in state:
+        for hex in state:  # change status of board to map every piece accurately
             board[hex.get_coordinate()] = hex
 
         return board

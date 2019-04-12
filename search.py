@@ -14,6 +14,7 @@ from datetime import datetime
 
 
 def main():
+
     board_dict = defaultdict()
 
     ran = range(-Hex.BOARD_SIZE, +Hex.BOARD_SIZE+1)
@@ -39,6 +40,7 @@ def main():
             obstacles.add(colour)
 
     print_board(board_dict, debug=True)
+    #print(float((abs(a.q() - b.q()) + abs(a.q() + a.r() - b.q() - b.r()) + abs(a.r() - b.r()))) / 2.0)
     goal_hexs = find_goals(colour)
     print(start_hexs.keys())
 
@@ -47,12 +49,10 @@ def main():
     end = datetime.now()
     path = search.a_star()
     print("Time Taken: {}".format(end - start))
-
+    print(len(path))
     output_paths(path, board_dict)
+    print(end - start)
 
-    # TODO: Search for and output winning sequence of moves
-
-    # ...
 
 def output_paths(path, empty_board=None):
     if path is None:
@@ -64,7 +64,7 @@ def output_paths(path, empty_board=None):
         if empty_board:
             board = {key: value.copy() for key, value in empty_board.items()}
             board.update(move.state())
-            print_board(board)
+            #print_board(board)
 
 
 def print_board(board_dict, message="", debug=False, **kwargs):
@@ -148,6 +148,7 @@ def print_board(board_dict, message="", debug=False, **kwargs):
     board = template.format(message, *cells)
     print(board, **kwargs)
 
+
 def find_goals(colour):
     green = [(-3, 4), (-2, 4),  (-1, 4), (0, 4)]
     red = [(4, -3), (4, -2), (4, -1), (4, 0)]
@@ -161,6 +162,7 @@ def find_goals(colour):
         coordinates = blue
 
     return {(q, r): Hex(q, r, "goal") for q, r in coordinates}
+
 
 # when this module is executed, run the `main` function:
 if __name__ == '__main__':
