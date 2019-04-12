@@ -3,6 +3,14 @@ import math
 
 
 class Move:
+    """
+    Class that defines a move between two states on the board
+    @param parent   : the parent move to the current
+    @param state    : the state of all player pieces on the board
+    @param goals    : the coordinates of all goal tiles for the current player
+    @param action   : the type of the move (JUMP, MOVE, EXIT)
+    @param cost     : the cost of the move
+    """
     def __init__(self, parent, state, goals, action='', cost=0.5):
         self._parent = parent   # previous Move
         self._state = state  # Hex
@@ -12,6 +20,13 @@ class Move:
         self._h = None
         self.cost = cost
 
+    """
+    Method to return all valid child branches to the current move for A star to explore. Defines as all possible valid 
+    movements for the player's pieces on the board 
+    @param board    : dict mapping coordinates to all hexs on the board
+    @param obstacles: list of type of all obstacles on the board
+    @return   list of all valid child moves 
+    """
     def get_children(self, board, obstacles):  # returns a list of valid children for A* to explore
         children = []
 
@@ -38,6 +53,11 @@ class Move:
 
         return children
 
+    """
+    Method to return all valid neighbours for  a piece currently on the board
+    @param piece : the current piece 
+    @return all valud neighbours for current piece, including goal tiles 
+    """
     def _get_neighbours(self, piece):  # adds any goal tiles which may be neighbours to the neighbours list
         neighbours = piece.get_neighbours()
 
@@ -47,6 +67,12 @@ class Move:
 
         return neighbours
 
+    """
+    Method to update board state with movement of tile
+    @param piece    : the piece that has moves
+    @param new_hex : the new board location of the hex
+     @return the updated board dict 
+    """
     def _update_state(self, piece, new_hex):
         state = {key: value for key, value in self._state.items()}
 
@@ -56,6 +82,10 @@ class Move:
 
         return state
 
+    """
+    Method to return the old and new positions of the tile defined by the move
+    @return tuple containing coordinates of old and new pos 
+    """
     def get_transition(self):  # returns movement of piece in final path, old coordinates and new coordinates
         if not self._parent:  # check if parent exists
             return None, None
@@ -65,6 +95,9 @@ class Move:
         new_pos = new_pos_set.difference(old_pos_set)
         return old_pos, new_pos
 
+    """
+    Method to print the current move
+    """
     def print_move(self):  # prints move in correct format
         old_pos, new_pos = self.get_transition()
         if not old_pos:
@@ -75,6 +108,13 @@ class Move:
         else:
             print("{} from {} to {}.".format(action, list(old_pos)[0], list(new_pos)[0]))
 
+    """
+    Method to return a valid move and action
+    @param curr_hex: the current hex
+    @param new_hex : the new hex to move to 
+    @param obstacles: list containing types of all obstacles on the board 
+    @param board    : dict mapping coordinates to all hexs on the board 
+    """
     def _action(self, curr_hex, new_hex, obstacles, board):  # determine what type of move piece is doing
 
         if self._is_goal(new_hex):  # if move is to a goal tile, action is exit
@@ -90,6 +130,11 @@ class Move:
         else:
             return new_hex, "MOVE"  # otherwise its just a normal move
 
+    """
+    Method returning if jump move is valid
+    @param hex  : hex tile that is result of jump move
+    @param obstacles: list containing types of all obstacles on the board 
+    """
     def _is_valid_jump(self, hex, obstacles):
         if hex is None:
             return False
@@ -99,9 +144,15 @@ class Move:
             return False
         return True
 
+    """
+    Method setting g value of the move
+    """
     def set_g(self, g):
         self._g = g
 
+    """
+    Method setting h value of the move
+    """
     def set_h(self):  # returns h cost of a tile
         # shortest distance to goal node
         path_cost = []
@@ -117,22 +168,39 @@ class Move:
 
         self._h = sum(path_cost)  # returns h cost of all pieces, to each piece's nearest goal, combined
 
+    """
+    Method returning boolean value indicating if given piece is adjacent to current 
+    """
     def _is_adjacent(self, piece, other):
         return self._hex_distance(piece, other) == 1
 
+    """
+    Method returning hex distance between two files 
+    function base on https://www.redblobgames.com/grids/hexagons/
+    """
     @staticmethod
-    # function inspired from: https://www.redblobgames.com/grids/hexagons/
     def _hex_distance(a, b):  # calculates distance between 2 hex tiles based on axial coordinates
         return float((abs(a.q() - b.q()) + abs(a.q() + a.r() - b.q() - b.r()) + abs(a.r() - b.r()))) / 2.0
 
-    def state(self):
-        return self._state
-
+    """
+    Method returning minimum possible step distance between tile and end state 
+    @return minimum distance
+    """
     def _min_dist(self, dist):  # heuristic function helper, length of path assuming blocks on alternate hexes
         if dist % 2 == 0:
             return int(dist / 2 + 1)
         else:
             return math.ceil(dist / 2.0)
+
+    """
+    Method returning if current state satisfies goal condition
+    @return boolean value indicating if state is goal state
+    """
+    def end(self):  # checks if all pieces have reached goal
+        return all([coordinate in self._goals.keys() for coordinate in self._state.keys()])
+
+    def state(self):
+        return self._state
 
     def parent(self):
         return self._parent
@@ -148,9 +216,6 @@ class Move:
 
     def action(self):
         return self._action
-
-    def end(self):  # checks if all pieces have reached goal
-        return all([coordinate in self._goals.keys() for coordinate in self._state.keys()])
 
     def _get_hex(self, coordinate, board):  # returns the hex on a board given the coordinate
         return board[coordinate].copy() if board.get(coordinate) else self._goals.get(coordinate).copy()

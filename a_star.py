@@ -4,6 +4,13 @@ import search
 
 
 class AStar:
+    """
+    Implementation of the search algorithm AStar to return an optimal path from the player pieces to the goal tile
+    @param board_dict   : dictionary mapping coordinates to  all non-player tiles on the board
+    @param start_hexs   : dictionary mapping coordinates to starting positions for all player positions on the board
+    @param goal_hexs    : dictionary mapping coordinates to all goal hexs for the current player
+    @param obstacles    : list of types for all obstacles on the board
+    """
     # initialise the algorithm with the board, starting positions, goals and blocks
     def __init__(self, board_dict, start_hexs, goal_hexs, obstacles):
         self._empty_board = board_dict
@@ -11,7 +18,10 @@ class AStar:
         self._goals = goal_hexs
         self._obstacles = obstacles
 
-    # Function encapsulates algorithm logic
+    """
+    Method to return optimal path to the goal tiles
+    @return list of moves from starting positions to goal tiles 
+    """
     def a_star(self):
         # set the first node as the starting positions of all pieces
         start = Move(None, self._start, self._goals)
@@ -63,6 +73,11 @@ class AStar:
 
         return path[::-1]  # reverse path
 
+    """
+    Method to update empty board dict with current player piece positions
+    @param state : dict mapping coordinates to current player positions 
+    @return      : dict mapping coordinates to all hexs on the board
+    """
     def update_board(self, state):
         board = {key: value.copy() for key, value in self._empty_board.items()}
 
