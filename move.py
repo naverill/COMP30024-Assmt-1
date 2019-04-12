@@ -1,7 +1,8 @@
 import copy
+import math
 
 class Move:
-    def __init__(self, parent, state, goals, action='', cost=0.5):
+    def __init__(self, parent, state, goals, action='', cost=0.1):
         self._parent = parent   # Move
         self._state = state # Hex
         self._goals = goals
@@ -105,7 +106,8 @@ class Move:
         for piece in self._state.values():
             goal_dist = []
             for goal in self._goals.values():
-                goal_dist.append(self._hex_distance(piece, goal))
+                opt_dist = self._min_dist(self._hex_distance(piece, goal))
+                goal_dist.append(opt_dist)
             path_cost.append(min(goal_dist))
 
         self._h = sum(path_cost)
@@ -119,6 +121,13 @@ class Move:
 
     def state(self):
         return self._state
+
+    def _min_dist(self, dist):
+        if dist % 2 == 0:
+            return int(dist / 2 + 1)
+        else:
+            return math.ceil(dist / 2.0)
+
 
     def parent(self):
         return self._parent

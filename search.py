@@ -10,6 +10,8 @@ import json
 from collections import defaultdict
 from hex import Hex
 import a_star
+from datetime import datetime
+
 
 def main():
     board_dict = defaultdict()
@@ -39,8 +41,12 @@ def main():
     print_board(board_dict, debug=True)
     goal_hexs = find_goals(colour)
     print(start_hexs.keys())
+
+    start = datetime.now()
     search = a_star.AStar(board_dict, start_hexs, goal_hexs, obstacles)
+    end = datetime.now()
     path = search.a_star()
+    print("Time Taken: {}".format(end - start))
 
     output_paths(path, board_dict)
 

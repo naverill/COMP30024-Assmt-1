@@ -44,7 +44,6 @@ class AStar:
 
         path = []
         current = curr_move
-
         while current is not None:
             path.append(current)
             current = current.parent()
