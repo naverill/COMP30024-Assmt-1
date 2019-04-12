@@ -159,8 +159,8 @@ class Move:
         for piece in self._state.values():  # loop through each piece in current state
             goal_dist = []
             for goal in self._goals.values():
-                opt_dist = self._min_dist(self._hex_distance(piece, goal))  # get closest goal node and add to list
-                #opt_dist = self._hex_distance(piece, goal)
+                # opt_dist = self._min_dist(self._hex_distance(piece, goal))  # get closest goal node and add to list
+                opt_dist = self._hex_distance(piece, goal)
                 goal_dist.append(opt_dist)
             path_cost.append(min(goal_dist))
             #print("Goal dist", goal_dist)

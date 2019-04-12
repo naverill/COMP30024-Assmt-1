@@ -39,32 +39,19 @@ def main():
             start_hexs[piece] = Hex(q, r, colour)
             obstacles.add(colour)
 
-    print_board(board_dict, debug=True)
-    #print(float((abs(a.q() - b.q()) + abs(a.q() + a.r() - b.q() - b.r()) + abs(a.r() - b.r()))) / 2.0)
     goal_hexs = find_goals(colour)
-    print(start_hexs.keys())
 
-    start = datetime.now()
     search = a_star.AStar(board_dict, start_hexs, goal_hexs, obstacles)
-    end = datetime.now()
+
     path = search.a_star()
-    print("Time Taken: {}".format(end - start))
-    print(len(path))
     output_paths(path, board_dict)
-    print(end - start)
 
 
 def output_paths(path, empty_board=None):
     if path is None:
-        print("Empty path")
         return
     for move in path:
         move.print_move()
-
-        if empty_board:
-            board = {key: value.copy() for key, value in empty_board.items()}
-            board.update(move.state())
-            #print_board(board)
 
 
 def print_board(board_dict, message="", debug=False, **kwargs):
