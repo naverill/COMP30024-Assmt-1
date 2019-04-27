@@ -41,9 +41,9 @@ def main():
 
     goal_hexs = find_goals(colour)
 
-    search = a_star.AStar(board_dict, start_hexs, goal_hexs, obstacles)
+    astar = a_star.AStar(board_dict, start_hexs, goal_hexs, obstacles)
 
-    path = search.a_star()
+    path = astar.search()
     output_paths(path, board_dict)
 
 

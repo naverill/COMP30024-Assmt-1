@@ -19,7 +19,7 @@ class Hex:
     @returns bool   : indicates if hex xcoordinate is valid 
     """
     @staticmethod
-    def is_valid(q, r):  # checks if a certain coordinate is valid
+    def is_valid(q, r):
         ran = range(-Hex.BOARD_SIZE, Hex.BOARD_SIZE + 1)
         return (-q - r in ran \
                 and -Hex.BOARD_SIZE <= q <= Hex.BOARD_SIZE \
@@ -164,3 +164,6 @@ class Hex:
     """
     def __gt__(self, other):
         return self._q > other.q() or (self._q == other.q() and self._r > other.r())
+
+    def __hash__(self):
+        return hash((self._q, self._r))

@@ -226,6 +226,13 @@ class Move:
     def _is_obstacle(self, piece, obstacles):  # returns if an object is preventing a move
         return piece.get_type() in obstacles
 
+    def __hash__(self):
+        if self.parent():
+            old_state = self.parent().state()
+            return hash((tuple(sorted(old_state.keys())), tuple(sorted(self._state.keys()))))
+        else:
+            return hash(tuple(sorted(self._state.keys())))
+
     def __eq__(self, other):
         # return sorted(self._state.keys()) == sorted(other.state().keys())
         return sorted(self.state().values()) == sorted(other.state().values())  # check if 2 tiles are the same

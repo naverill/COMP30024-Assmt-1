@@ -22,7 +22,7 @@ class AStar:
     Method to return optimal path to the goal tiles
     @return list of moves from starting positions to goal tiles 
     """
-    def a_star(self):
+    def search(self):
         # set the first node as the starting positions of all pieces
         start = Move(None, self._start, self._goals)
         # G cost of starting node is zero
@@ -31,14 +31,14 @@ class AStar:
         start.set_h()
 
         frontier = PriorityQueue()  # unexplored nodes
-        explored = []  # explored nodes
+        explored = set()  # explored nodes
 
         frontier.put(start, start.f())  # begin by exploring first node
 
         # loop until no more nodes left to explore
         while not frontier.empty():
             curr_move = frontier.get()  # get node to be expanded, according to f cost
-            explored.append(curr_move)  # add node to be expanded in explored
+            explored.add(curr_move)  # add node to be expanded in explored
 
             if curr_move.end():  # if goal is found break out of loop
                 break
